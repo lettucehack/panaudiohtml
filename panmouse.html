@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>hardcopy</title>
+  </head>
+
+  <body>
+    click x position = stereo position
+  </body>
+<script>
+let audioCtx;
+let buffer = null;
+addEventListener("click", function(e)
+  {
+    if(!audioCtx) {
+      audioCtx = new AudioContext();
+    }
+    sfx1 = new Audio("sonarping.ogg");
+    var sourceNode = audioCtx.createMediaElementSource(sfx1);
+    // Create a stereo panner
+    let panNode = audioCtx.createStereoPanner();
+    sourceNode.connect(panNode);
+    panNode.connect(audioCtx.destination);
+    
+    panpos=0;
+    if (e.pageX<=window.innerWidth/2)
+    {
+      panpos=-1*(1-(e.pageX/(window.innerWidth/2)));
+      panNode.pan.value=panpos;
+    }
+    else
+    {
+      panpos=(e.pageX-(window.innerWidth/2))/(window.innerWidth/2);
+      panNode.pan.value=panpos;
+    }
+    console.log(panpos);
+    document.body.innerHTML=panpos;
+    sfx1.play();
+  }
+)
+</script>
+</html>
